@@ -80,7 +80,7 @@ def combine_data(s2, s1, dem, month):
     
     x1 = s2.sel(month = month).drop_vars(['month'], errors='ignore')
     x2 = s1.sel(month = month).to_array(dim = 'band').drop_vars(['month'], errors='ignore')
-    x3 = dem.to_array().squeeze().expand_dims(dim  = {'band' : ['dem']}).drop_vars(['time', 'variable'], errors='ignore')
+    x3 = dem.squeeze().expand_dims(dim={'band': ['dem']}).drop_vars(['time', 'variable'], errors='ignore')
     expected_order = ['y', 'x', 'band']
     dims = [d for d in expected_order if d in x3.dims]
     x3 = x3.transpose(*dims)
