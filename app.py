@@ -31,7 +31,9 @@ st.sidebar.title("Select Date")
 year = st.sidebar.selectbox("Year", [2020, 2021, 2022, 2023])
 month = st.sidebar.selectbox("Month", list(range(1, 6)))
 
-s2_monthly, s1_monthly, dem = data.get_satellite_data(shapefile_path = '/data/Chapuralapalli.shp',
+path = os.path.join('data', 'Chapuralapalli.shp')
+
+s2_monthly, s1_monthly, dem = data.get_satellite_data(shapefile_path = path,
                                   start_date = f'{year}-{month}-01',
                                   end_date = f'{year}-{month+3}-01')
 
