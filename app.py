@@ -37,16 +37,7 @@ s2_monthly, s1_monthly, dem = data.get_satellite_data(shapefile_path = path,
                                   start_date = f"{year:04d}-{month:02d}-01",
                                   end_date = f"{year:04d}-{month+3:02d}-01")
 
-st.write("Sentinel-2 loaded?", s2_monthly is not None)
-st.write("Sentinel-1 loaded?", s1_monthly is not None)
-st.write("DEM loaded?", dem is not None)
-
-if s2_monthly is not None:
-    st.write("S2 shape:", s2_monthly.shape)
-if s1_monthly is not None:
-    st.write("S1 shape:", s1_monthly.shape)
-if dem is not None:
-    st.write("DEM shape:", dem.shape)
+s1_da_array = s1_monthly.to_array(dim='band')
 
 combined_data = data.combine_data(s2_monthly, s1_monthly, dem, month)
 
