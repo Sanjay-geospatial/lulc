@@ -35,7 +35,7 @@ def get_satellite_data(shapefile_path, start_date, end_date):
     s2_ds = odc.stac.load(
         items=signed_items,
         bands=s2_bands,
-        bbox=bounds,
+        bbox=bbox,
         crs=32643,
         resolution=10
     )
@@ -54,7 +54,7 @@ def get_satellite_data(shapefile_path, start_date, end_date):
     s1_da = odc.stac.load(
         items=s1_items,
         bands=['vv', 'vh'],
-        bbox=bounds,
+        bbox=bbox,
         crs=32643,
         resolution=10
     )
@@ -69,7 +69,7 @@ def get_satellite_data(shapefile_path, start_date, end_date):
     dem_items_signed = [planetary_computer.sign(i) for i in dem_items]
     dem_da = odc.stac.load(
         items=dem_items_signed,
-        bbox=bounds,
+        bbox=bbox,
         crs=32643,
         resolution=10
     )
