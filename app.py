@@ -39,7 +39,7 @@ s2_monthly, s1_monthly, dem = data.get_satellite_data(shapefile_path = path,
 
 s1_da_array = s1_monthly.to_array(dim='band')
 
-combined_data = data.combine_data(s2_monthly, s1_monthly, dem, month)
+combined_data = data.combine_data(s2_monthly, s1_da_array, dem, month)
 
 gdf = gpd.read_file(path)
 
