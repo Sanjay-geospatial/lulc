@@ -65,8 +65,9 @@ def get_satellite_data(shapefile_path, start_date, end_date):
         bbox=bbox
     )
     dem_items = list(dem_search.get_all_items())
+    dem_items_signed = [planetary_computer.sign(i) for i in dem_items]
     dem_da = odc.stac.load(
-        items=dem_items,
+        items=dem_items_signed,
         bbox=bounds,
         crs=32643,
         resolution=10
