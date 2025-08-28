@@ -13,6 +13,7 @@ import geopandas as gpd
 import pystac_client
 import odc.stac
 import data
+import skops.io as sio
 
 st.set_page_config(
     page_title="Land cover app",
@@ -20,7 +21,8 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded")
 
-model = joblib.load('lulc_model.pkl')
+model = sio.load("lulc_model.skops")
+# model = joblib.load('lulc_model.pkl')
 
 st.title("☁️→🌤️ Land cover App")
 st.write("Prototype for Land cover analysis")
