@@ -58,6 +58,7 @@ def get_satellite_data(shapefile_path, start_date, end_date):
         crs=32643,
         resolution=10
     )
+    s1_da_monthly = s1_da.groupby('time.month').median(dim = 'time')
 
     # --- DEM ---
     dem_search = catalog.search(
@@ -73,7 +74,7 @@ def get_satellite_data(shapefile_path, start_date, end_date):
         resolution=10
     )
 
-    return s2_monthly, s1_da, dem_da
+    return s2_monthly, s1_da_monthly, dem_da
 
 def combine_data(s2, s1, dem, month):
   x1 = s2.sel(month = month).drop_vars(['month'], errors='ignore')
