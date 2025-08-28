@@ -29,8 +29,7 @@ def get_satellite_data(shapefile_path, start_date, end_date):
     s2_items = list(s2_search.get_all_items())
     st.write(f"Found {len(s2_items)} Sentinel-2 items")
 
-    s2_bands = ['red', 'green', 'blue', 'nir', 'nir08', 'nir09', 
-                'rededge1', 'rededge2', 'rededge3', 'swir16', 'swir22']
+    s2_bands = ['B02', 'B03', 'B04', 'B08', 'B05', 'B06', 'B07', 'B8A', 'B11', 'B12']
 
     s2_ds = odc.stac.load(
         items=s2_items,
