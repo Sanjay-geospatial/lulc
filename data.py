@@ -4,6 +4,8 @@ import geopandas as gpd
 import pystac_client
 import odc.stac
 import planetary_computer
+import xarray as xr
+import rioxarray as rxr
 
 def get_satellite_data(shapefile_path, start_date, end_date):
     # Check shapefile
