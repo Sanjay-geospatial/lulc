@@ -39,7 +39,7 @@ s2_monthly, s1_monthly, dem = data.get_satellite_data(shapefile_path = path,
 
 combined_data = data.combine_data(s2_monthly, s1_monthly, dem, month)
 
-gdf = gpd.read_file('data/Chapuralapalli.shp')
+gdf = gpd.read_file(path)
 
 raster_df = pd.DataFrame()
 
