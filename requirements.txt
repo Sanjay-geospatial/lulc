@@ -11,3 +11,4 @@ pyproj
 rtree
 matplotlib
 skops
+planetary-computer
