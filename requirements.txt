@@ -8,5 +8,6 @@ rasterio
 shapely
 fiona
 pyproj
+rtree
 matplotlib
 skops
