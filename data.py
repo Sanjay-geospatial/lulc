@@ -81,11 +81,17 @@ def combine_data(s2, s1, dem, month):
   x2 = s1.sel(month = month).to_array(dim = 'band').drop_vars(['month'], errors='ignore')
   x3 = dem.to_array().squeeze().expand_dims(dim  = {'band' : ['dem']}).drop_vars(['time', 'variable'], errors='ignore')
 
-  x1 = x1.rio.reproject_match(x3)
-  x2 = x2.rio.reproject_match(x3)
+  st.write("S2 coords:")
+  st.write(x1.coords)
+  st.write("S1 coords:")
+  st.write(x2.coords)
+  st.write("DEM coords:")
+  st.write(x3.coords)
 
-    # Align coordinates
-  x1, x2, x3 = xr.align(x1, x2, x3, join='override')  # ensures same x, y coords
+    # Display CRS if available
+  st.write("S2 CRS:", x1.rio.crs)
+  st.write("S1 CRS:", x2.rio.crs)
+  st.write("DEM CRS:", x3.rio.crs)
 
     # Concatenate along 'band'
   combined = xr.concat([x1, x2, x3], dim='band')
