@@ -1,3 +1,10 @@
+import os
+import geopandas as gpd
+import xarray as xr
+import rioxarray as rxr
+import pystac_client
+import odc.stac
+
 def get_satellite_data(shapefile_path, start_date, end_date):
   if not os.path.exists(shapefile_path):
     st.error(f"Shapefile not found: {shapefile_path}. Did you upload all shapefile components in the data/ folder?")
