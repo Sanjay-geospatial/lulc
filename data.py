@@ -77,9 +77,9 @@ def get_satellite_data(shapefile_path, start_date, end_date):
     return s2_monthly, s1_da_monthly, dem_da
 
 def combine_data(s2, s1, dem, month):
-  x1 = s2.sel(month = month).drop_vars(['month'], errors='ignore')
-  x2 = s1.sel(month = month).to_array(dim = 'band').drop_vars(['month'], errors='ignore')
-  x3 = dem.to_array().squeeze().expand_dims(dim  = {'band' : ['dem']}).drop_vars(['time', 'variable'], errors='ignore')
+    x1 = s2.sel(month = month).drop_vars(['month'], errors='ignore')
+    x2 = s1.sel(month = month).to_array(dim = 'band').drop_vars(['month'], errors='ignore')
+    x3 = dem.to_array().squeeze().expand_dims(dim  = {'band' : ['dem']}).drop_vars(['time', 'variable'], errors='ignore')
     
-  combined = xr.concat([x1, x2, x3], dim = 'band')
-  return combined
+    combined = xr.concat([x1, x2, x3], dim = 'band')
+    return combined
