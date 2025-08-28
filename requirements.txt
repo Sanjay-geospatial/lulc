@@ -1,6 +1,10 @@
-joblilb
+joblib
 xarray
 rioxarray
 odc-stac
 geopandas
-pystac_client
+pystac-client
+rasterio
+shapely
+fiona
+pyproj
