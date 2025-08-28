@@ -1,5 +1,13 @@
 def get_satellite_data(shapefile_path, start_date, end_date):
-  gdf = gpd.read_file(shapefile_path)
+  if not os.path.exists(shapefile_path):
+    st.error(f"Shapefile not found: {shapefile_path}. Did you upload all shapefile components in the data/ folder?")
+  else:
+      try:
+          gdf = gpd.read_file(shapefile_path)
+      except Exception as e:
+          st.error(f"Failed to read shapefile: {e}")
+      else:
+          st.write("Shapefile successfully loaded! Here's the bounding box:", gdf.total_bounds)
   bounds = gdf.total_bounds
   bbox = (float(bounds[0]), float(bounds[1]), float(bounds[2]), float(bounds[3]))
 
