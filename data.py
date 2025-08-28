@@ -4,6 +4,7 @@ import xarray as xr
 import rioxarray as rxr
 import pystac_client
 import odc.stac
+import streamlit as st
 
 def get_satellite_data(shapefile_path, start_date, end_date):
   if not os.path.exists(shapefile_path):
