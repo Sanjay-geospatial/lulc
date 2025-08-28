@@ -37,7 +37,9 @@ s2_monthly, s1_monthly, dem = data.get_satellite_data(shapefile_path = path,
                                   start_date = f"{year:04d}-{month:02d}-01",
                                   end_date = f"{year:04d}-{month+3:02d}-01")
 
-s1_da_array = s1_monthly.to_array(dim='band')
+st.write("S1 type:", type(s1_monthly))
+st.write("S1 dims:", s1_monthly.dims)
+st.write("S1 data variables:", list(s1_monthly.data_vars))
 
 combined_data = data.combine_data(s2_monthly, s1_da_array, dem, month)
 
