@@ -24,7 +24,7 @@ st.set_page_config(
 model = sio.load("lulc_model.skops")
 # model = joblib.load('lulc_model.pkl')
 
-st.title("☁️→🌤️ Land cover App")
+st.title("☘🌳🌴 Land cover App")
 st.write("Prototype for Land cover analysis")
 
 st.sidebar.title("Select Date")
