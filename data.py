@@ -87,10 +87,13 @@ def combine_data(s2, s1, dem, month):
 
     st.write("S2 coords:")
     st.write(x1.coords)
+    st.write(x1.dims)
     st.write("S1 coords:")
     st.write(x2.coords)
+    st.write(x2.dims)
     st.write("DEM coords:")
     st.write(x3.coords)
+    st.write(x3.dims)
 
     # Display CRS if available
     st.write("S2 CRS:", x1.rio.crs)
