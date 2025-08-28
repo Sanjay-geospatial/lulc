@@ -27,12 +27,13 @@ def get_satellite_data(shapefile_path, start_date, end_date):
         query={'eo:cloud_cover': {'lt': 10}}
     )
     s2_items = list(s2_search.get_all_items())
+    signed_items = [planetary_computer.sign(i) for i in s2_items]
     st.write(f"Found {len(s2_items)} Sentinel-2 items")
 
     s2_bands = ['B02', 'B03', 'B04', 'B08', 'B05', 'B06', 'B07', 'B8A', 'B11', 'B12']
 
     s2_ds = odc.stac.load(
-        items=s2_items,
+        items=signed_items,
         bands=s2_bands,
         bbox=bounds,
         crs=32643,
