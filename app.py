@@ -104,8 +104,8 @@ im = ax.imshow(
     predicted_array.values,
     cmap=cmap,
     norm=norm,
-    extent=[xmin, xmax, ymin, ymax],  # ✅ align with vector
-    origin="upper"  # important: matches raster orientation
+    extent=[xmin, xmax, ymin, ymax],
+    origin="upper"
 )
 
 # overlay boundary
@@ -123,6 +123,11 @@ png_path = "lulc_plot.png"
 plt.savefig(png_path, bbox_inches="tight", dpi=150)
 plt.close(fig)
 
-# --- Display in Streamlit ---
-image = Image.open(png_path)
-st.image(image, caption="LULC Classification", use_column_width=True)
+# --- Download button in Streamlit ---
+with open(png_path, "rb") as f:
+    st.download_button(
+        label="📥 Download LULC Map (PNG)",
+        data=f,
+        file_name="lulc_classification.png",
+        mime="image/png"
+    )
