@@ -64,6 +64,8 @@ predicted_array = xr.DataArray(
 
 predicted_array = predicted_array.rio.write_crs(combined_data.rio.crs)
 
+predicted_array.rio.to_raster('lulc.tif')
+
 gdf = gdf.to_crs(predicted_array.rio.crs)
 
 m = leafmap.Map()
@@ -77,7 +79,7 @@ m.add_gdf(
         "fillOpacity": 0.0 
     }
 )
-m.add_raster(predicted_array, colormap = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13'], layer_name = 'lulc')
+m.add_raster('lulc.tif', colormap = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13'], layer_name = 'lulc')
 m.add_legend(title = 'Legend', labels = list(classes.values()), colors = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13'])
 m.to_streamlit(height=700)
 
