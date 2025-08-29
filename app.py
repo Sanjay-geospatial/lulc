@@ -78,12 +78,34 @@ m.add_gdf(
         "fillOpacity": 0.0 
     }
 )
-m.add_raster('lulc.tif', colormap = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13'], layer_name = 'lulc')
-m.add_legend(title = 'Legend', labels = list(classes.values()), colors = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13'])
 m.to_streamlit(height=700)
 
+classes = {
+    0: "Built-up",
+    1: "Water",
+    2: "Barren",
+    3: "Crop",
+    4: "Forest"
+}
+
+colors = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13']
+cmap = mcolors.ListedColormap(colors)
+
+# Plot raster
+fig, ax = plt.subplots(figsize=(8, 6))
+im = ax.imshow(predicted_array, cmap=cmap)
+
+# Create a legend
+legend_elements = [Patch(facecolor=colors[i], label=classes[i]) for i in classes]
+ax.legend(handles=legend_elements, loc='lower left', fontsize=8, frameon=True)
+
+ax.set_title("Predicted Land Use / Land Cover", fontsize=12)
+ax.axis("off")
+
+st.pyplot(fig)
+
 pixel_area_m2 = 10*10  # example if 10m resolution
-unique, counts = np.unique(predicted_reshaped_clip[~np.isnan(predicted_reshaped_clip)], return_counts=True)
+unique, counts = np.unique(predicted_array, return_counts=True)
 area_sqkm = counts * pixel_area_m2 / 1e6
 area_dict = {classes[int(k)]: v for k,v in zip(unique, area_sqkm)}
 
