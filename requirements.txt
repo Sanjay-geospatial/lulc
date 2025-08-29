@@ -13,3 +13,4 @@ matplotlib
 skops
 planetary-computer
 leafmap
+localtileserver
