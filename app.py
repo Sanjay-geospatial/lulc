@@ -89,27 +89,19 @@ classes = {
 }
 
 colors = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13']
-xmin, xmax = float(predicted_array.x.min()), float(predicted_array.x.max())
-ymin, ymax = float(predicted_array.y.min()), float(predicted_array.y.max())
-cmap = mcolors.ListedColormap(colors)
 
-# Plot raster
-fig, ax = plt.subplots(figsize=(5, 3))
-ax.imshow(
-    predicted_array,
-    cmap=cmap,
-    extent=[xmin, xmax, ymin, ymax],
-    origin="upper"
-)
+height, width = predicted_array.shape
+rgb = np.zeros((height, width, 3), dtype=np.uint8)
 
-# Create a legend
-legend_elements = [Patch(facecolor=colors[i], label=classes[i]) for i in classes]
-ax.legend(handles=legend_elements, loc='lower left', fontsize=8, frameon=True)
+for i, hex_color in enumerate(colors):
+    mask = predicted_array.values == i
+    rgb[mask] = [int(hex_color[1:3],16), int(hex_color[3:5],16), int(hex_color[5:7],16)]
 
-ax.set_title("Predicted Land Use / Land Cover", fontsize=12)
-ax.axis("off")
+# Save as PNG
+plt.imsave("lulc.png", rgb)
 
-st.pyplot(fig)
+img = Image.open("lulc.png")
+st.image(img, caption="Predicted LULC", use_column_width=True)
 
 pixel_area_m2 = 10*10  # example if 10m resolution
 unique, counts = np.unique(predicted_array, return_counts=True)
