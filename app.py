@@ -31,7 +31,7 @@ st.title("☘🌳🌴 Land cover App")
 st.write("Prototype for Land cover analysis")
 
 st.sidebar.title("Select Date")
-year = st.sidebar.selectbox("Year", [2020, 2021, 2022, 2023])
+year = st.sidebar.selectbox("Year", [2023])
 month = st.sidebar.selectbox("Month", list(range(1, 6)))
 
 path = os.path.join('data', 'Chapuralapalli.shp')
@@ -158,9 +158,10 @@ for class_id, class_name in class_dict.items():
         "Count": count,
         "Area (ha)": area_ha
     })
+df = pd.DataFrame(records)
 
 st.write('Area statistics')
-st.table(records)
+st.table(df)
 
 fig, ax = plt.subplots(figsize=(6,6))
 
