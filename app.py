@@ -163,7 +163,7 @@ df = pd.DataFrame(records)
 st.write('Area statistics')
 st.table(df)
 
-fig, ax = plt.subplots(figsize=((4, 4)))
+fig, ax = plt.subplots(figsize=((2, 2)))
 
 wedges, texts, autotexts = ax.pie(
     df["Area (ha)"],
@@ -173,6 +173,6 @@ wedges, texts, autotexts = ax.pie(
     wedgeprops=dict(width=0.4)  # <-- donut style
 )
 
-plt.setp(autotexts, size=10, weight="bold", color="white")
+plt.setp(autotexts, size=5, weight="bold", color="white")
 
 st.pyplot(fig)
