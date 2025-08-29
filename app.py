@@ -16,6 +16,7 @@ import data
 import skops.io as sio
 import leafmap.foliumap as leafmap
 from PIL import Image
+import rasterstats
 
 st.set_page_config(
     page_title="Land cover app",
@@ -63,6 +64,7 @@ predicted_array = xr.DataArray(
 )
 
 predicted_array = predicted_array.rio.write_crs(combined_data.rio.crs)
+predicted_array.rio.to_raster('predicted_lulc.tif')
 
 gdf = gdf.to_crs(predicted_array.rio.crs)
 
@@ -131,3 +133,46 @@ with open(png_path, "rb") as f:
         file_name="lulc_classification.png",
         mime="image/png"
     )
+
+stats = rasterstats.zonal_stats(
+    gdf,
+    "predicted_lulc.tif",
+    categorical=True,
+    geojson_out=True
+)
+class_dict = {
+    0 : 'barren',
+    1 : 'water',
+    2 : 'agriculture land',
+    3 : 'built up',
+    4 : 'forest'
+}
+
+records = []
+for class_id, class_name in class_dict.items():
+    count = stats[0]['properties'].get(class_id, 0) 
+    area_ha = (count * 100) / 10000          
+    records.append({
+        "Class ID": class_id,
+        "Class": class_name,
+        "Count": count,
+        "Area (ha)": area_ha
+    })
+
+st.write('Area statistics')
+st.table(records)
+
+fig, ax = plt.subplots(figsize=(6,6))
+
+wedges, texts, autotexts = ax.pie(
+    df["Area (ha)"],
+    labels=df["Class"],
+    autopct="%.1f%%",
+    startangle=90,
+    wedgeprops=dict(width=0.4)  # <-- donut style
+)
+
+plt.setp(autotexts, size=10, weight="bold", color="white")
+ax.set_title("LULC Area Distribution", fontsize=14)
+
+st.pyplot(fig)
