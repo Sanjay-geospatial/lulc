@@ -64,8 +64,6 @@ predicted_array = xr.DataArray(
 
 predicted_array = predicted_array.rio.write_crs(combined_data.rio.crs)
 
-predicted_array.rio.to_raster('lulc.tif')
-
 gdf = gdf.to_crs(predicted_array.rio.crs)
 
 m = leafmap.Map()
@@ -98,7 +96,7 @@ norm = mcolors.BoundaryNorm(bounds, cmap.N)
 # Plot raster + boundary
 fig, ax = plt.subplots(figsize=(8, 6))
 
-im = ax.imshow(clipped, cmap=cmap, norm=norm)
+im = ax.imshow(predicted_array, cmap=cmap, norm=norm)
 gdf.boundary.plot(ax=ax, edgecolor="cyan", linewidth=2)  # ✅ overlay boundary
 
 ax.axis("off")
