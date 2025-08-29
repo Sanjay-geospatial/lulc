@@ -163,39 +163,22 @@ df = pd.DataFrame(records)
 st.write('Area statistics')
 st.table(df)
 
-sizes  = df["Area (ha)"].to_numpy()
-labels = df["Class"].astype(str).tolist()
-
-def autopct_fmt(pct):
-    # Hide tiny slices to avoid clutter
-    return f"{pct:.1f}%" if pct >= 2 else ""
-
-fig, ax = plt.subplots(figsize=(1.8, 1.8), dpi=150)
+ fig, ax = plt.subplots(figsize=(0.5, 0.5))   # smaller figure
 
 wedges, texts, autotexts = ax.pie(
-    sizes,
-    labels=None,                 # keep labels out of the donut
-    autopct=autopct_fmt,
+    df["Area (ha)"],
+    labels=df["Class"],
+    autopct="%.1f%%",
     startangle=90,
-    pctdistance=0.78,            # position % text neatly inside ring
-    wedgeprops=dict(width=0.35, edgecolor="white"),
-    textprops=dict(fontsize=8, color="white", weight="bold")  # smaller % text
+    wedgeprops=dict(width=0.35)  # thinner ring
 )
 
-# Optional: ensure % texts are truly centered
-for t in autotexts:
-    t.set_ha("center")
-    t.set_va("center")
+# Style
+plt.setp(autotexts, size=4, weight="bold", color="white")
+ax.set_title("LULC Area Distribution", fontsize=12)
 
-# Put class names in a legend instead of on wedges
-ax.legend(
-    wedges, labels,
-    title="Class",
-    loc="center left",
-    bbox_to_anchor=(1.02, 0.5),
-    fontsize=9
-)
-
+# Render in Streamlit
+st.pyplot(fig)
 ax.set_aspect("equal")
 ax.set_title("LULC Area Distribution", fontsize=12, pad=6)
 
