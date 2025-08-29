@@ -12,3 +12,4 @@ rtree
 matplotlib
 skops
 planetary-computer
+leafmap
