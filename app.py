@@ -78,7 +78,7 @@ m.add_gdf(
         "fillOpacity": 0.0 
     }
 )
-m.to_streamlit(height=700)
+m.to_streamlit(height=300)
 
 classes = {
     0: "Built-up",
@@ -89,11 +89,18 @@ classes = {
 }
 
 colors = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13']
+xmin, xmax = float(predicted_array.x.min()), float(predicted_array.x.max())
+ymin, ymax = float(predicted_array.y.min()), float(predicted_array.y.max())
 cmap = mcolors.ListedColormap(colors)
 
 # Plot raster
-fig, ax = plt.subplots(figsize=(8, 6))
-im = ax.imshow(predicted_array, cmap=cmap)
+fig, ax = plt.subplots(figsize=(5, 3))
+ax.imshow(
+    predicted_array,
+    cmap=cmap,
+    extent=[xmin, xmax, ymin, ymax],
+    origin="upper"
+)
 
 # Create a legend
 legend_elements = [Patch(facecolor=colors[i], label=classes[i]) for i in classes]
