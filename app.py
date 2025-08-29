@@ -15,6 +15,7 @@ import odc.stac
 import data
 import skops.io as sio
 import leafmap.foliumap as leafmap
+import localtileserver
 
 st.set_page_config(
     page_title="Land cover app",
