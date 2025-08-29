@@ -63,7 +63,7 @@ predicted_array = xr.DataArray(
 
 predicted_array = predicted_array.rio.write_crs(combined_data.rio.crs)
 
-gdf = gdf.to_crs(predicted_reshaped.rio.crs)
+gdf = gdf.to_crs(predicted_array.rio.crs)
 
 m = leafmap.Map()
 m.add_basemap("Esri.WorldImagery")
