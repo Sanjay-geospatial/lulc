@@ -88,30 +88,32 @@ classes = {
 }
 colors = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13']
 
-# Create colormap
+# Colormap
 cmap = mcolors.ListedColormap(colors)
 bounds = np.arange(-0.5, len(classes) + 0.5, 1)
 norm = mcolors.BoundaryNorm(bounds, cmap.N)
 
-# Plot raster + boundary
+# --- Plot raster + boundary ---
 fig, ax = plt.subplots(figsize=(8, 6))
 
-im = ax.imshow(predicted_array, cmap=cmap, norm=norm)
-gdf.boundary.plot(ax=ax, edgecolor="cyan", linewidth=2)  # ✅ overlay boundary
+# convert xarray → numpy
+im = ax.imshow(predicted_array.values, cmap=cmap, norm=norm)
+
+# overlay boundary
+gdf.boundary.plot(ax=ax, edgecolor="cyan", linewidth=2)
 
 ax.axis("off")
 ax.set_title("Predicted LULC")
 
 # Legend
 legend_elements = [Patch(facecolor=colors[i], label=classes[i]) for i in classes]
-ax.legend(handles=legend_elements, bbox_to_anchor=(1.05, 1), loc='upper left')
+ax.legend(handles=legend_elements, bbox_to_anchor=(1.05, 1), loc="upper left")
 
-# Save as PNG
+# Save to PNG
 png_path = "lulc_plot.png"
 plt.savefig(png_path, bbox_inches="tight", dpi=150)
 plt.close(fig)
 
-# Display with PIL
+# --- Display in Streamlit ---
 image = Image.open(png_path)
 st.image(image, caption="LULC Classification", use_column_width=True)
-plt.show()
