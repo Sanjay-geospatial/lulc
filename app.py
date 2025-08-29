@@ -163,23 +163,18 @@ df = pd.DataFrame(records)
 st.write('Area statistics')
 st.table(df)
 
-fig, ax = plt.subplots(figsize=(0.5, 0.5))   # smaller figure
+fig, ax = plt.subplots(figsize=(2, 2))
 
 wedges, texts, autotexts = ax.pie(
     df["Area (ha)"],
     labels=df["Class"],
-    autopct="%.1f%%",
     startangle=90,
     wedgeprops=dict(width=0.35)  # thinner ring
 )
 
 # Style
-plt.setp(autotexts, size=4, weight="bold", color="white")
+plt.setp(autotexts, size=8, weight="bold", color="white")
 ax.set_title("LULC Area Distribution", fontsize=12)
 
 # Render in Streamlit
-st.pyplot(fig)
-ax.set_aspect("equal")
-ax.set_title("LULC Area Distribution", fontsize=12, pad=6)
-
 st.pyplot(fig)
