@@ -96,14 +96,23 @@ norm = mcolors.BoundaryNorm(bounds, cmap.N)
 # --- Plot raster + boundary ---
 fig, ax = plt.subplots(figsize=(8, 6))
 
-# convert xarray → numpy
-im = ax.imshow(predicted_array.values, cmap=cmap, norm=norm)
+# get spatial extent from raster
+xmin, ymin, xmax, ymax = predicted_array.rio.bounds()
+
+# plot raster with correct geospatial extent
+im = ax.imshow(
+    predicted_array.values,
+    cmap=cmap,
+    norm=norm,
+    extent=[xmin, xmax, ymin, ymax],  # ✅ align with vector
+    origin="upper"  # important: matches raster orientation
+)
 
 # overlay boundary
 gdf.boundary.plot(ax=ax, edgecolor="cyan", linewidth=2)
 
-ax.axis("off")
 ax.set_title("Predicted LULC")
+ax.axis("off")
 
 # Legend
 legend_elements = [Patch(facecolor=colors[i], label=classes[i]) for i in classes]
