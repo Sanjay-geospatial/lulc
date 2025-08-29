@@ -163,7 +163,7 @@ df = pd.DataFrame(records)
 st.write('Area statistics')
 st.table(df)
 
- fig, ax = plt.subplots(figsize=(0.5, 0.5))   # smaller figure
+fig, ax = plt.subplots(figsize=(0.5, 0.5))   # smaller figure
 
 wedges, texts, autotexts = ax.pie(
     df["Area (ha)"],
