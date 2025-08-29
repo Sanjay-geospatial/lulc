@@ -14,6 +14,7 @@ import pystac_client
 import odc.stac
 import data
 import skops.io as sio
+import leafmap.foliumap as leafmp
 
 st.set_page_config(
     page_title="Land cover app",
@@ -64,38 +65,20 @@ predicted_array = predicted_array.rio.write_crs(combined_data.rio.crs)
 
 gdf = gdf.to_crs(predicted_reshaped.rio.crs)
 
-predicted_reshaped_clip = predicted_array.rio.clip(
-    gdf.geometry,
-    crs=gdf.crs,
-    drop=False, 
-    all_touched=True 
+m = leafmap.Map()
+m.add_basemap("Esri.WorldImagery")
+m.add_gdf(
+    gdf,
+    layer_name="village boundary",
+    style={
+        "color": "#6BAEED",  
+        "weight": 2,        
+        "fillOpacity": 0.0 
+    }
 )
-
-classes = {
-    0: "Barren land",
-    1: "Water",
-    2: "Agricultural land",
-    3: "Settlements",
-    4: "Forest",
-}
-colors = ["saddlebrown", "blue", "red", "magenta", "green"]
-
-cmap = mcolors.ListedColormap(colors)
-bounds = np.arange(-0.5, len(classes)+0.5, 1)
-norm = mcolors.BoundaryNorm(bounds, cmap.N)
-
-# Create figure
-fig, ax = plt.subplots(figsize=(8,6))
-im = ax.imshow(predicted_reshaped_clip, cmap=cmap, norm=norm)
-ax.axis("off")
-ax.set_title(f"Predicted LULC for {month}/{year}")
-
-# Create legend
-legend_elements = [Patch(facecolor=colors[i], label=classes[i]) for i in classes]
-ax.legend(handles=legend_elements, bbox_to_anchor=(1.05, 1), loc='upper left')
-
-# Display in Streamlit
-st.pyplot(fig)
+m.add_raster(predicted_array, colormap = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13'], layer_name = 'lulc')
+m.add_legend(title = 'Legend', labels = list(classes.values()), colors = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13'])
+m.to_streamlit(height=700)
 
 pixel_area_m2 = 10*10  # example if 10m resolution
 unique, counts = np.unique(predicted_reshaped_clip[~np.isnan(predicted_reshaped_clip)], return_counts=True)
