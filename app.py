@@ -82,38 +82,38 @@ m.add_gdf(
 m.to_streamlit(height=300)
 
 classes = {
-    0: "Built-up",
+    0: "Barren land",
     1: "Water",
-    2: "Barren",
-    3: "Crop",
-    4: "Forest"
+    2: "Agricultural land",
+    3: "Settlements",
+    4: "Forest",
 }
-
 colors = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13']
 
-height, width = predicted_array.shape
-rgb = np.zeros((height, width, 3), dtype=np.uint8)
+# Create colormap
+cmap = mcolors.ListedColormap(colors)
+bounds = np.arange(-0.5, len(classes) + 0.5, 1)
+norm = mcolors.BoundaryNorm(bounds, cmap.N)
 
-for i, hex_color in enumerate(colors):
-    mask = predicted_array.values == i
-    rgb[mask] = [int(hex_color[1:3],16), int(hex_color[3:5],16), int(hex_color[5:7],16)]
+# Plot raster + boundary
+fig, ax = plt.subplots(figsize=(8, 6))
+
+im = ax.imshow(clipped, cmap=cmap, norm=norm)
+gdf.boundary.plot(ax=ax, edgecolor="cyan", linewidth=2)  # ✅ overlay boundary
+
+ax.axis("off")
+ax.set_title("Predicted LULC")
+
+# Legend
+legend_elements = [Patch(facecolor=colors[i], label=classes[i]) for i in classes]
+ax.legend(handles=legend_elements, bbox_to_anchor=(1.05, 1), loc='upper left')
 
 # Save as PNG
-plt.imsave("lulc.png", rgb)
+png_path = "lulc_plot.png"
+plt.savefig(png_path, bbox_inches="tight", dpi=150)
+plt.close(fig)
 
-img = Image.open("lulc.png")
-st.image(img, caption="Predicted LULC", use_column_width=True)
-
-pixel_area_m2 = 10*10  # example if 10m resolution
-unique, counts = np.unique(predicted_array, return_counts=True)
-area_sqkm = counts * pixel_area_m2 / 1e6
-area_dict = {classes[int(k)]: v for k,v in zip(unique, area_sqkm)}
-
-# --- Bar Plot ---
-fig2, ax2 = plt.subplots(figsize=(8,4))
-ax2.bar(area_dict.keys(), area_dict.values(), color=[colors[int(k)] for k in unique])
-ax2.set_ylabel("Area (sq. km)")
-ax2.set_title("Area of Each LULC Class")
-ax2.set_xticklabels(area_dict.keys(), rotation=45, ha='right')
-
-st.pyplot(fig2)
+# Display with PIL
+image = Image.open(png_path)
+st.image(image, caption="LULC Classification", use_column_width=True)
+plt.show()
