@@ -163,7 +163,7 @@ df = pd.DataFrame(records)
 st.write('Area statistics')
 st.table(df)
 
-fig, ax = plt.subplots(figsize=(6,6))
+fig, ax = plt.subplots(figsize=((4, 4)))
 
 wedges, texts, autotexts = ax.pie(
     df["Area (ha)"],
@@ -174,6 +174,5 @@ wedges, texts, autotexts = ax.pie(
 )
 
 plt.setp(autotexts, size=10, weight="bold", color="white")
-ax.set_title("LULC Area Distribution", fontsize=14)
 
 st.pyplot(fig)
