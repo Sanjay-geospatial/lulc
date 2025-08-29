@@ -14,7 +14,7 @@ import pystac_client
 import odc.stac
 import data
 import skops.io as sio
-import leafmap.foliumap as leafmp
+import leafmap.foliumap as leafmap
 
 st.set_page_config(
     page_title="Land cover app",
