@@ -24,6 +24,26 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded")
 
+st.markdown(
+    """
+    <style>
+    /* Apply gradient to entire app */
+    .stApp {
+        background: linear-gradient(270deg, #ff9a9e, #fad0c4, #fad390, #a1c4fd, #c2e9fb);
+        background-size: 1000% 1000%;
+        animation: gradientShift 30s ease infinite;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 model = sio.load("lulc_model.skops")
 # model = joblib.load('lulc_model.pkl')
 
@@ -165,16 +185,12 @@ st.table(df)
 
 fig, ax = plt.subplots(figsize=(2, 2))
 
-wedges, texts, autotexts = ax.pie(
+wedges, texts = ax.pie(
     df["Area (ha)"],
     labels=df["Class"],
     startangle=90,
     wedgeprops=dict(width=0.35)  # thinner ring
 )
-
-# Style
-plt.setp(autotexts, size=8, weight="bold", color="white")
-ax.set_title("LULC Area Distribution", fontsize=12)
 
 # Render in Streamlit
 st.pyplot(fig)
