@@ -77,7 +77,6 @@ if (
       collections=["sentinel-2-l2a"],
       datetime=f"{start_date}/{end_date}",
       bbox=bbox,
-      bands = s2_bands,
       query={"eo:cloud_cover": {"lt": 10}}
   )
   s2_items = list(s2_search.get_all_items())
@@ -112,8 +111,8 @@ if (
     chosen_item_last_s1  = next(i for i in s1_items_signed if i.datetime.strftime("%Y-%m-%d") == selected_date_last_s1)
 
     # --- Load datasets ---
-    s2_ds_first = odc.stac.load([chosen_item_first_s2], bbox=bbox, crs=32643, resolution=10)
-    s2_ds_last  = odc.stac.load([chosen_item_last_s2],  bbox=bbox, crs=32643, resolution=10)
+    s2_ds_first = odc.stac.load([chosen_item_first_s2], bands = s2_bands, bbox=bbox, crs=32643, resolution=10)
+    s2_ds_last  = odc.stac.load([chosen_item_last_s2], bands = s2_bands, bbox=bbox, crs=32643, resolution=10)
 
     s1_ds_first = odc.stac.load([chosen_item_first_s1], bands=['vv','vh'], bbox=bbox, crs=32643, resolution=10)
     s1_ds_last  = odc.stac.load([chosen_item_last_s1],  bands=['vv','vh'], bbox=bbox, crs=32643, resolution=10)
