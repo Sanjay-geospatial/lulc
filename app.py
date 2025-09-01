@@ -15,6 +15,7 @@ import odc.stac
 from datetime import datetime
 import streamlit as st
 import data
+import calendar
 
 # --- Page config ---
 st.set_page_config(
@@ -60,8 +61,10 @@ if (
   catalog = pystac_client.Client.open(STAC_URL)
 
   # --- Dates ---
-  start_date = f"{year_selected}-{months_dict[start_month_selected]}-01"
-  end_date = f"{year_selected}-{months_dict[end_month_selected]}-30"
+  start_date = f"{year_selected}-{months_dict[start_month_selected]}-01T00:00:00Z"
+  
+  last_day = calendar.monthrange(int(year_selected), int(months_dict[end_month_selected]))[1]
+  end_date = f"{year_selected}-{months_dict[end_month_selected]}-{last_day:02d}T23:59:59Z"
 
   st.write(f"📅 Searching between **{start_date}** and **{end_date}**")
 
