@@ -13,6 +13,7 @@ import planetary_computer
 import pystac_client
 import odc.stac
 from datetime import datetime
+import skops.io as sio
 import streamlit as st
 import data
 import calendar
