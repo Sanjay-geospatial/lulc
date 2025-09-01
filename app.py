@@ -153,7 +153,7 @@ if (
     raster_df_last = pd.DataFrame()
 
     for i in total_ds_last.band.values:
-      raster_df_last[i] = raster_df_last.sel(band = i).values.flatten()
+      raster_df_last[i] = total_ds_last.sel(band = i).values.flatten()
       raster_df_last[i].fillna(raster_df_last[i].mean(), inplace = True)
 
     predicted_first = model.predict(raster_df_first)
