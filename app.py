@@ -128,18 +128,18 @@ if (
     s1_last_array = s1_ds_last.squeeze().to_array(dim = 'band')
     dem_array = dem_da.to_array().squeeze().expand_dims({'band' : ['dem']}) 
 
-    st.write('Sentinel 2 first bands', s2_first_array.band)
-    st.write('Sentinel 2 last bands', s2_last_array.band)
-    st.write('Sentinel 1 first bands', s1_first_array.band)
-    st.write('Sentinel 1 last bands', s1_last_array.band)
-    st.write('DEM bands', dem_array.band)
+    # st.write('Sentinel 2 first bands', s2_first_array.band)
+    # st.write('Sentinel 2 last bands', s2_last_array.band)
+    # st.write('Sentinel 1 first bands', s1_first_array.band)
+    # st.write('Sentinel 1 last bands', s1_last_array.band)
+    # st.write('DEM bands', dem_array.band)
                                  
     # --- Combine datasets ---
-    total_ds_first = xr.concat([s2_ds_first, s1_ds_first, dem_da], dim = 'band')
-    total_ds_last  = xr.concat([s2_ds_last,  s1_ds_last,  dem_da], dim = 'band')
+    total_ds_first = xr.concat([s2_first_array, s1_first_array, dem_da], dim = 'band')
+    total_ds_last  = xr.concat([s2_last_array,  s1_last_array,  dem_da], dim = 'band')
 
-    # st.write('Total dataset first bands', total_ds_first.band.values)
-    # st.write('Total dataset last bands', total_ds_last.band.values)
+    st.write('Total dataset first bands', total_ds_first.band.values)
+    st.write('Total dataset last bands', total_ds_last.band.values)
 
     gdf = gpd.read_file(shapefile_path)
     model = sio.load('lulc_model.skops')
