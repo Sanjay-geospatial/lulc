@@ -118,7 +118,7 @@ if (
     dem_items_signed = [planetary_computer.sign(i) for i in dem_search.get_all_items()]
     dem_da = odc.stac.load(dem_items_signed, bbox=bbox, crs=32643, resolution=10)
 
-    st.write('S2 first', s2_ds_fisrt)
+    st.write('S2 first', s2_ds_first)
     st.write('S2 last', s2_ds_last)
     st.write('S1 first', s1_ds_fisrt)
     st.write('S1 last', s1_ds_last)
