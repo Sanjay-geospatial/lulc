@@ -127,8 +127,8 @@ if (
 
     st.write('Sentinel 2 first bands', s2_first_array.band)
     st.write('Sentinel 2 last bands', s2_last_array.band)
-    st.write('Sentinel 1 first bands', s2_first_array.band)
-    st.write('Sentinel 1 last bands', s2_last_array.band)
+    st.write('Sentinel 1 first bands', s1_first_array.band)
+    st.write('Sentinel 1 last bands', s1_last_array.band)
     st.write('DEM bands', dem_array.band)
                                  
     # --- Combine datasets ---
