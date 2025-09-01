@@ -188,12 +188,6 @@ if (
     predicted_array_last = predicted_array_last.rio.write_crs(total_ds_last.rio.crs)
     predicted_array_last.rio.to_raster('predicted_lulc_last.tif')
 
-    test_1 = rxr.open_rasterio('predicted_lulc_first.tif')
-    st.write("First LULC CRS:", test_1.rio.crs)
-
-    test_2 = rxr.open_rasterio('predicted_lulc_last.tif')
-    st.write("Second LULC CRS:", test_2.rio.crs)
-
   else:
     st.info("👆 Please select valid dates for both Sentinel-1 and Sentinel-2.")      
       
