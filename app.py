@@ -131,8 +131,8 @@ if (
     st.write('DEM', type(dem_array), dem_array.attrs)
 
     # --- Combine datasets ---
-    total_ds_first = data.combine(s2_ds_first, s1_ds_first, dem_da)
-    total_ds_last  = data.combine(s2_ds_last,  s1_ds_last,  dem_da)
+    total_ds_first = xr.concat([s2_ds_first, s1_ds_first, dem_da])
+    total_ds_last  = xr.concat([s2_ds_last,  s1_ds_last,  dem_da])
 
     gdf = gpd.read_file(shapefile_path)
     model = sio.load('lulc_model.skops')
