@@ -118,11 +118,17 @@ if (
     dem_items_signed = [planetary_computer.sign(i) for i in dem_search.get_all_items()]
     dem_da = odc.stac.load(dem_items_signed, bbox=bbox, crs=32643, resolution=10)
 
-    st.write('S2 first', type(s2_ds_first.squeeze().to_array(dim = 'band')), s2_ds_first.dims)
-    st.write('S2 last', type(s2_ds_last.squeeze().to_array(dim = 'band')), s2_ds_last.dims)
-    st.write('S1 first', type(s1_ds_first.squeeze().to_array(dim = 'band')), s1_ds_first.dims)
-    st.write('S1 last', type(s1_ds_last.squeeze().to_array(dim = 'band')), s1_ds_last.dims)
-    st.write('DEM', type(dem_da.to_array().squeeze().expand_dims({'band' : ['dem']})), dem_da.dims)
+    s2_first_array = s2_ds_first.squeeze().to_array(dim = 'band')                            
+    s2_last_array = s2_ds_last.squeeze().to_array(dim = 'band')
+    s1_first_array = s1_ds_first.squeeze().to_array(dim = 'band')
+    s1_last_array = s1_ds_last.squeeze().to_array(dim = 'band')
+    dem_array = dem_da.to_array().squeeze().expand_dims({'band' : ['dem']})                             
+                                 
+    st.write('S2 first', type(s2_first_array), s2_first_array.dims)
+    st.write('S2 last', type(s2_last_array), s2_last_array.dims)
+    st.write('S1 first', type(s1_first_array), s1_first_array.dims)
+    st.write('S1 last', type(s1_last_array), s1_last_array.dims)
+    st.write('DEM', type(dem_array), dem_array.dims)
 
     # --- Combine datasets ---
     total_ds_first = data.combine(s2_ds_first, s1_ds_first, dem_da)
