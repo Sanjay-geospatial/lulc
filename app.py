@@ -49,7 +49,7 @@ if (
     and end_month_selected != "None"):
   
   # --- Shapefile ---
-  shapefile_path = '/content/Chapuralapalli.shp'
+  shapefile_path = os.path.join('data', 'Chapuralapalli.shp')
   gdf = gpd.read_file(shapefile_path)
   st.success("✅ Shapefile loaded")
   bounds = gdf.total_bounds
