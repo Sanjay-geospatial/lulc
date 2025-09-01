@@ -70,10 +70,14 @@ if (
   st.write(f"📅 Searching between **{start_date}** and **{end_date}**")
 
   # --- Sentinel-2 search ---
+
+  s2_bands = ['B02', 'B03', 'B04', 'B08', 'B05', 'B06', 'B07', 'B8A', 'B11', 'B12']
+        
   s2_search = catalog.search(
       collections=["sentinel-2-l2a"],
       datetime=f"{start_date}/{end_date}",
       bbox=bbox,
+      bands = s2_bands,
       query={"eo:cloud_cover": {"lt": 10}}
   )
   s2_items = list(s2_search.get_all_items())
