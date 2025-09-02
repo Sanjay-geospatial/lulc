@@ -209,7 +209,7 @@ if (
         pixel_area_ha = pixel_area / 10000   # hectares
         
         # Run zonal stats
-        stats = raster_stats.zonal_stats(
+        stats = rasterstats.zonal_stats(
             zone,
             tif,
             categorical=True,
