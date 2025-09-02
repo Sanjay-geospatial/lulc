@@ -16,3 +16,4 @@ leafmap
 localtileserver
 Pillow
 rasterstats
+earthpy
