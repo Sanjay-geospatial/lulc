@@ -21,6 +21,7 @@ import streamlit as st
 import data
 import calendar
 import rasterstats
+import earthpy.clip as ec
 
 # --- Page config ---
 st.set_page_config(
@@ -195,7 +196,9 @@ if (
     st.write('First image', np.unique(predicted_array_first, return_counts = True))
     st.write('Last image', np.unique(predicted_array_last, return_counts = True))
 
-    def raster_to_pydeck(raster_path, colors=None, zoom=8):
+    gdf.to_crs(predicted_array_last.rio.crs, inplace = True)
+                                 
+    def raster_to_pydeck(raster_path, shp_to_clip, colors=None, zoom=11):
             
         # --- 1. Open raster with rioxarray ---
         da = rxr.open_rasterio(raster_path).squeeze()  # remove band dim if present
@@ -214,8 +217,9 @@ if (
                 print("Invalid geometry skipped:", e)
     
         # --- 3. GeoDataFrame ---
-        gdf = gpd.GeoDataFrame({"lulc_class": values}, geometry=polygons, crs=crs)
-        gdf = gdf.to_crs(epsg=4326)
+        lulc_gdf = gpd.GeoDataFrame({"lulc_class": values}, geometry=polygons, crs=crs)
+        lulc_gdf = ec.clip_shp(lulc_gdf, shp_to_clip)
+        lulc_gdf = lulc_gdf.to_crs(epsg=4326)
     
         # --- 4. Define colors ---
         if colors is None:
@@ -227,10 +231,10 @@ if (
             for i, cls in enumerate(unique_classes)
         }
     
-        gdf["color"] = gdf["lulc_class"].map(class_colors)
+        lulc_gdf["color"] = lulc_gdf["lulc_class"].map(class_colors)
     
         # --- 5. To GeoJSON ---
-        geojson_data = json.loads(gdf.to_json())
+        geojson_data = json.loads(lulc_gdf.to_json())
     
         # --- 6. Pydeck layer ---
         polygon_layer = pdk.Layer(
@@ -244,8 +248,8 @@ if (
     
         # --- 7. View state ---
         view_state = pdk.ViewState(
-            latitude=gdf.geometry.centroid.y.mean(),
-            longitude=gdf.geometry.centroid.x.mean(),
+            latitude=lulc_gdf.geometry.centroid.y.mean(),
+            longitude=lulc_gdf.geometry.centroid.x.mean(),
             zoom=zoom,
         )
     
@@ -262,12 +266,12 @@ if (
 
     with col1:
         st.subheader(f"LULC Map as of {selected_date_first_s2}")
-        deck1 = raster_to_pydeck('predicted_lulc_first.tif')
+        deck1 = raster_to_pydeck('predicted_lulc_first.tif', gdf)
         st.pydeck_chart(deck1)
     
     with col2:
         st.subheader(f"LULC Map as of {selected_date_last_s2}")
-        deck2 = raster_to_pydeck('predicted_lulc_last.tif')
+        deck2 = raster_to_pydeck('predicted_lulc_last.tif', gdf)
         st.pydeck_chart(deck2)
 
 
@@ -277,8 +281,6 @@ if (
     2 : 'agriculture land',
     3 : 'built up',
     4 : 'forest'}
-
-    gdf.to_crs(predicted_array_last.rio.crs, inplace = True)
 
     def area_stats(tif, zone, class_dict):
         # Open raster with rioxarray
