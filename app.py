@@ -230,7 +230,7 @@ if (
         if colors is None:
             colors = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13']
     
-        unique_classes = sorted(gdf["lulc_class"].unique())
+        unique_classes = sorted(lulc_gdf["lulc_class"].unique())
         class_colors = {
             cls: [int(colors[i].lstrip('#')[j:j+2], 16) for j in (0, 2, 4)] + [180]
             for i, cls in enumerate(unique_classes)
