@@ -240,7 +240,29 @@ if (
     st.table(area_first)
 
     st.write(f'Area statistics as of {selected_date_last_s2}')
-    st.table(area_last)   
+    st.table(area_last)
+
+    color_map = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13']
+
+    def plot_donut(df, title, colors=color_map):
+        fig, ax = plt.subplots()
+        wedges, texts, autotexts = ax.pie(
+            df["Area (ha)"],
+            labels=df["Class"],
+            autopct='%1.1f%%',
+            wedgeprops=dict(width=0.4),  # donut effect
+            colors=colors
+        )
+        ax.set_title(title)
+        return fig
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.pyplot(plot_donut(area_first, f'Area statistics as of {selected_date_first_s2}'))
+
+    with col2:
+        st.pyplot(plot_donut(area_last,f'Area statistics as of {selected_date_last_s2}'))
 
   else:
     st.info("👆 Please select valid dates for both Sentinel-1 and Sentinel-2.")      
