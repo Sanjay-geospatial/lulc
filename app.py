@@ -234,7 +234,7 @@ if (
 
     gdf.to_crs(predicted_array_last.rio.crs, inplace = True)
                                  
-    def raster_to_pydeck(raster_path, shp_to_clip, colors=None, zoom=15):
+    def raster_to_pydeck(raster_path, shp_to_clip, colors=None, zoom=12):
             
         # --- 1. Open raster with rioxarray ---
         da = rxr.open_rasterio(raster_path).squeeze()  # remove band dim if present
