@@ -139,8 +139,8 @@ if (
     total_ds_first = xr.concat([s2_first_array, s1_first_array, dem_array], dim = 'band')
     total_ds_last  = xr.concat([s2_last_array,  s1_last_array,  dem_array], dim = 'band')
 
-    st.write('Total dataset first bands', total_ds_first.band.values)
-    st.write('Total dataset last bands', total_ds_last.band.values)
+    # st.write('Total dataset first bands', total_ds_first.band.values)
+    # st.write('Total dataset last bands', total_ds_last.band.values)
 
     gdf = gpd.read_file(shapefile_path)
     model = sio.load('lulc_model.skops')
