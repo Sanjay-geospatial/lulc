@@ -33,6 +33,26 @@ st.set_page_config(
 st.title("☘🌳🌴 Land cover App")
 st.write("Prototype for Land cover analysis")
 
+st.markdown(
+    """
+    <style>
+    /* Apply gradient to entire app */
+    .stApp {
+        background: linear-gradient(270deg, #ff9a9e, #fad0c4, #fad390, #a1c4fd, #c2e9fb);
+        background-size: 1000% 1000%;
+        animation: gradientShift 30s ease infinite;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # --- Year and month options ---
 years = ['None', 2023, 2024, 2025]
 months = ['None', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
