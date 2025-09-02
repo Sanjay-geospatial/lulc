@@ -199,29 +199,40 @@ if (
     3 : 'built up',
     4 : 'forest'}
 
-    def area_stats(tif, zone):
+    def area_stats(tif, zone, class_dict):
+        # Open raster with rioxarray
+        da = rxr.open_rasterio(tif, masked=True)
         
-        stats = rasterstats.zonal_stats(
+        # Get pixel resolution (in map units, usually meters)
+        res_x, res_y = da.rio.resolution()
+        pixel_area = abs(res_x * res_y)      # m²
+        pixel_area_ha = pixel_area / 10000   # hectares
+        
+        # Run zonal stats
+        stats = raster_stats.zonal_stats(
             zone,
             tif,
             categorical=True,
-            geojson_out=True )
-        records = []
+            geojson_out=False
+        )
         
+        # Build results table
+        records = []
         for class_id, class_name in class_dict.items():
-            count = stats[0]['properties'].get(class_id, 0) 
-            area_ha = (count * 100) / 10000          
+            count = stats[0].get(class_id, 0)  # pixel count for class
+            area_ha = count * pixel_area_ha
             records.append({
                 "Class ID": class_id,
                 "Class": class_name,
                 "Count": count,
                 "Area (ha)": area_ha
             })
+        
         df = pd.DataFrame(records)
         return df
 
-    area_first = area_stats('predicted_lulc_first.tif', gdf)
-    area_last = area_stats('predicted_lulc_last.tif', gdf)
+    area_first = area_stats('predicted_lulc_first.tif', gdf, class_dict)
+    area_last = area_stats('predicted_lulc_last.tif', gdf, class_dict)
 
     st.write(f'Area statistics as of {selected_date_first_s2}')
     st.table(area_first)
