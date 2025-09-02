@@ -17,6 +17,7 @@ import skops.io as sio
 import streamlit as st
 import data
 import calendar
+import rasterstats
 
 # --- Page config ---
 st.set_page_config(
