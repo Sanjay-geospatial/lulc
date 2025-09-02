@@ -218,7 +218,12 @@ if (
     
         # --- 3. GeoDataFrame ---
         lulc_gdf = gpd.GeoDataFrame({"lulc_class": values}, geometry=polygons, crs=crs)
-        lulc_gdf = ec.clip_shp(lulc_gdf, shp_to_clip)
+        if shp_to_clip.crs != crs:
+            shp_to_clip = shp_to_clip.to_crs(crs)
+
+        # Clip using GeoPandas overlay (instead of earthpy)
+        lulc_gdf = gpd.clip(lulc_gdf, shp_to_clip)
+
         lulc_gdf = lulc_gdf.to_crs(epsg=4326)
     
         # --- 4. Define colors ---
