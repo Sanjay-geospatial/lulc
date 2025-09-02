@@ -261,12 +261,12 @@ if (
     col1, col2 = st.columns(2)
 
     with col1:
-        st.subheader("LULC Map as of {selected_date_first_s2}")
+        st.subheader(f"LULC Map as of {selected_date_first_s2}")
         deck1 = raster_to_pydeck('predicted_lulc_first.tif')
         st.pydeck_chart(deck1)
     
     with col2:
-        st.subheader("LULC Map as of {selected_date_last_s2}")
+        st.subheader(f"LULC Map as of {selected_date_last_s2}")
         deck2 = raster_to_pydeck('predicted_lulc_last.tif')
         st.pydeck_chart(deck2)
 
