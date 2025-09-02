@@ -94,7 +94,7 @@ if (
   # --- Shapefile ---
   shapefile_path = os.path.join('data', 'Chapuralapalli.shp')
   gdf = gpd.read_file(shapefile_path)
-  st.success("✅ Shapefile loaded")
+  # st.success("✅ Shapefile loaded")
   bounds = gdf.total_bounds
   bbox = (float(bounds[0]), float(bounds[1]), float(bounds[2]), float(bounds[3]))
 
