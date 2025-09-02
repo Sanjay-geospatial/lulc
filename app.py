@@ -8,7 +8,10 @@ import random
 from tqdm.auto import tqdm
 import matplotlib.pyplot as plt
 import rioxarray as rxr 
-import rioxarray as rxr
+from rasterio.features import shapes
+from shapely.geometry import shape
+import pydeck as pdk
+import json 
 import planetary_computer
 import pystac_client
 import odc.stac
@@ -192,6 +195,82 @@ if (
     st.write('First image', np.unique(predicted_array_first, return_counts = True))
     st.write('Last image', np.unique(predicted_array_last, return_counts = True))
 
+    def raster_to_pydeck(raster_path, colors=None, zoom=8):
+            
+        # --- 1. Open raster with rioxarray ---
+        da = rioxarray.open_rasterio(raster_path).squeeze()  # remove band dim if present
+        img = da.values
+        mask = img != da.rio.nodata
+        transform = da.rio.transform()
+        crs = da.rio.crs
+    
+        # --- 2. Polygonize ---
+        polygons, values = [], []
+        for geom, val in shapes(img.astype("int32"), mask=mask, transform=transform):
+            try:
+                polygons.append(shape(geom))
+                values.append(int(val))
+            except Exception as e:
+                print("Invalid geometry skipped:", e)
+    
+        # --- 3. GeoDataFrame ---
+        gdf = gpd.GeoDataFrame({"lulc_class": values}, geometry=polygons, crs=crs)
+        gdf = gdf.to_crs(epsg=4326)
+    
+        # --- 4. Define colors ---
+        if colors is None:
+            colors = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13']
+    
+        unique_classes = sorted(gdf["lulc_class"].unique())
+        class_colors = {
+            cls: [int(colors[i].lstrip('#')[j:j+2], 16) for j in (0, 2, 4)] + [180]
+            for i, cls in enumerate(unique_classes)
+        }
+    
+        gdf["color"] = gdf["lulc_class"].map(class_colors)
+    
+        # --- 5. To GeoJSON ---
+        geojson_data = json.loads(gdf.to_json())
+    
+        # --- 6. Pydeck layer ---
+        polygon_layer = pdk.Layer(
+            "GeoJsonLayer",
+            geojson_data,
+            stroked=False,
+            filled=True,
+            get_fill_color="properties.color",
+            pickable=True,
+        )
+    
+        # --- 7. View state ---
+        view_state = pdk.ViewState(
+            latitude=gdf.geometry.centroid.y.mean(),
+            longitude=gdf.geometry.centroid.x.mean(),
+            zoom=zoom,
+        )
+    
+        # --- 8. Deck ---
+        deck = pdk.Deck(
+            layers=[polygon_layer],
+            initial_view_state=view_state,
+            tooltip={"text": "Class: {lulc_class}"}
+        )
+    
+        return deck
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("LULC Map as of {selected_date_first_s2}")
+        deck1 = raster_to_pydeck('predicted_lulc_first.tif')
+        st.pydeck_chart(deck1)
+    
+    with col2:
+        st.subheader("LULC Map as of {selected_date_last_s2}")
+        deck2 = raster_to_pydeck('predicted_lulc_last.tif')
+        st.pydeck_chart(deck2)
+
+
     class_dict = {
     0 : 'barren',
     1 : 'water',
@@ -249,7 +328,7 @@ if (
         wedges, texts, autotexts = ax.pie(
             df["Area (ha)"],
             labels=df["Class"],
-            autopct='%1.1f%%',
+            # autopct='%1.1f%%',
             wedgeprops=dict(width=0.4),  # donut effect
             colors=colors
         )
