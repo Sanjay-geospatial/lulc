@@ -188,6 +188,43 @@ if (
     predicted_array_last = predicted_array_last.rio.write_crs(total_ds_last.rio.crs)
     predicted_array_last.rio.to_raster('predicted_lulc_last.tif')
 
+    class_dict = {
+    0 : 'barren',
+    1 : 'water',
+    2 : 'agriculture land',
+    3 : 'built up',
+    4 : 'forest'}
+
+    def area_stats(tif, zone):
+        
+        stats = rasterstats.zonal_stats(
+            zone,
+            tif,
+            categorical=True,
+            geojson_out=True )
+        records = []
+        
+        for class_id, class_name in class_dict.items():
+            count = stats[0]['properties'].get(class_id, 0) 
+            area_ha = (count * 100) / 10000          
+            records.append({
+                "Class ID": class_id,
+                "Class": class_name,
+                "Count": count,
+                "Area (ha)": area_ha
+            })
+        df = pd.DataFrame(records)
+        return df
+
+    area_first = area_stats('predicted_lulc_first.tif', gdf)
+    area_last = area_stats('predicted_lulc_last.tif', gdf)
+
+    st.write(f'Area statistics as of {selected_date_first_s2}')
+    st.table(area_first)
+
+    st.write(f'Area statistics as of {selected_date_last_s2}')
+    st.table(area_last)   
+
   else:
     st.info("👆 Please select valid dates for both Sentinel-1 and Sentinel-2.")      
       
