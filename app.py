@@ -38,7 +38,7 @@ st.markdown(
     <style>
     /* Apply gradient to entire app */
     .stApp {
-        background: linear-gradient(270deg, #ff9a9e, #fad0c4, #fad390, #a1c4fd, #c2e9fb);
+        background: linear-gradient(#fad0c4, #fad390, #a1c4fd, #c2e9fb);
         background-size: 1000% 1000%;
         animation: gradientShift 30s ease infinite;
     }
@@ -213,8 +213,8 @@ if (
     predicted_array_last = predicted_array_last.rio.write_crs(total_ds_last.rio.crs)
     predicted_array_last.rio.to_raster('predicted_lulc_last.tif')
 
-    st.write('First image', np.unique(predicted_array_first, return_counts = True))
-    st.write('Last image', np.unique(predicted_array_last, return_counts = True))
+    # st.write('First image', np.unique(predicted_array_first, return_counts = True))
+    # st.write('Last image', np.unique(predicted_array_last, return_counts = True))
 
     gdf.to_crs(predicted_array_last.rio.crs, inplace = True)
                                  
