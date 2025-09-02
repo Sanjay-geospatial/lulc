@@ -325,7 +325,7 @@ if (
 
     def plot_donut(df, title, colors=color_map):
         fig, ax = plt.subplots()
-        wedges, texts, autotexts = ax.pie(
+        wedges, texts = ax.pie(
             df["Area (ha)"],
             labels=df["Class"],
             # autopct='%1.1f%%',
