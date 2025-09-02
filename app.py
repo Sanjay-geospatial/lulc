@@ -198,7 +198,7 @@ if (
     def raster_to_pydeck(raster_path, colors=None, zoom=8):
             
         # --- 1. Open raster with rioxarray ---
-        da = rioxarray.open_rasterio(raster_path).squeeze()  # remove band dim if present
+        da = rxr.open_rasterio(raster_path).squeeze()  # remove band dim if present
         img = da.values
         mask = img != da.rio.nodata
         transform = da.rio.transform()
