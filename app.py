@@ -36,12 +36,27 @@ st.write("Prototype for Land cover analysis")
 st.markdown(
     """
     <style>
-    /* Apply animated gradient to entire Streamlit app */
+    /* Apply animated gradient to the whole app */
     .stApp {
         background: linear-gradient(-45deg, #fad0c4, #fad390, #a1c4fd, #c2e9fb);
         background-size: 400% 400%;
         animation: gradientShift 60s linear infinite;
         min-height: 100vh;
+    }
+
+    /* Make tables/dataframes solid white */
+    .stDataFrame, .stTable {
+        background-color: white !important;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+    /* Also fix the metric/data container backgrounds */
+    .stMarkdown, .stText, .stNumberInput, .stSelectbox, .stMultiSelect,
+    .stSlider, .stButton, .stRadio, .stCheckbox {
+        background-color: white;
+        border-radius: 8px;
+        padding: 4px;
     }
 
     @keyframes gradientShift {
@@ -53,6 +68,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 # --- Year and month options ---
 years = ['None', 2023, 2024, 2025]
 months = ['None', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
