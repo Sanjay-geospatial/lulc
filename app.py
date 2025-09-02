@@ -199,6 +199,8 @@ if (
     3 : 'built up',
     4 : 'forest'}
 
+    gdf.to_crs(predicted_array_last.rio.crs, inplace = True)
+
     def area_stats(tif, zone, class_dict):
         # Open raster with rioxarray
         da = rxr.open_rasterio(tif, masked=True)
