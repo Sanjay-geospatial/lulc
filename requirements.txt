@@ -17,3 +17,4 @@ localtileserver
 Pillow
 rasterstats
 earthpy
+setuptools
