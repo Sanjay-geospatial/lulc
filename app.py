@@ -189,8 +189,8 @@ if (
     predicted_array_last = predicted_array_last.rio.write_crs(total_ds_last.rio.crs)
     predicted_array_last.rio.to_raster('predicted_lulc_last.tif')
 
-    st.write('First image', np.unique(predicted_array_first, return_counts = True)
-    st.write('Last image', np.unique(predicted_array_last, return_counts = True)
+    st.write('First image', np.unique(predicted_array_first, return_counts = True))
+    st.write('Last image', np.unique(predicted_array_last, return_counts = True))
 
     class_dict = {
     0 : 'barren',
