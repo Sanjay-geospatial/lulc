@@ -315,93 +315,93 @@ if (
         deck2 = raster_to_pydeck('predicted_lulc_last.tif', gdf, ['#eccb76', '#00a99b', '#9cea4d', '#949494', '#006401'])
         st.pydeck_chart(deck2)
 
-    base_colors = {
-    1: [110, 43, 12, 180],   # '#6E2B0C' (Brown)
-    2: [24, 84, 173, 180],   # '#1854AD' (Blue)
-    3: [219, 30, 7, 180],    # '#DB1E07' (Red)
-    4: [237, 59, 183, 180],  # '#ED3BB7' (Pink)
-    5: [17, 140, 19, 180]},   # '#118C13' (Green
+    # base_colors = {
+    # 1: [110, 43, 12, 180],   # '#6E2B0C' (Brown)
+    # 2: [24, 84, 173, 180],   # '#1854AD' (Blue)
+    # 3: [219, 30, 7, 180],    # '#DB1E07' (Red)
+    # 4: [237, 59, 183, 180],  # '#ED3BB7' (Pink)
+    # 5: [17, 140, 19, 180]},   # '#118C13' (Green
 
 
-    def raster_to_change_vector(raster_path1, raster_path2):
-        # --- 1. Load rasters ---
+    # def raster_to_change_vector(raster_path1, raster_path2):
+    #     # --- 1. Load rasters ---
 
-        r1 = rxr.open_rasterio(raster_path1).squeeze()
-        r2 = rxr.open_rasterio(raster_path2).squeeze()
+    #     r1 = rxr.open_rasterio(raster_path1).squeeze()
+    #     r2 = rxr.open_rasterio(raster_path2).squeeze()
 
-        # Align CRS and resolution
-        r2 = r2.rio.reproject_match(r1)
+    #     # Align CRS and resolution
+    #     r2 = r2.rio.reproject_match(r1)
         
-        r1 = raster_path1.squeeze()
-        r2 = raster_path2.squeeze()
+    #     r1 = raster_path1.squeeze()
+    #     r2 = raster_path2.squeeze()
     
-        # --- 2. Change detection (encode from-to as single number) ---
-        change_map = (r1.astype("int32") * 100) + r2.astype("int32")
-        change_only = change_map.where(r1 != r2)
+    #     # --- 2. Change detection (encode from-to as single number) ---
+    #     change_map = (r1.astype("int32") * 100) + r2.astype("int32")
+    #     change_only = change_map.where(r1 != r2)
     
-        # --- 3. Polygonize ---
-        polygons, values = [], []
-        for geom, val in shapes(
-            change_only.values,
-            mask=~np.isnan(change_only.values),
-            transform=change_only.rio.transform()
-        ):
-            polygons.append(shape(geom))
-            values.append(int(val))
+    #     # --- 3. Polygonize ---
+    #     polygons, values = [], []
+    #     for geom, val in shapes(
+    #         change_only.values,
+    #         mask=~np.isnan(change_only.values),
+    #         transform=change_only.rio.transform()
+    #     ):
+    #         polygons.append(shape(geom))
+    #         values.append(int(val))
     
-        gdf = gpd.GeoDataFrame({"change_code": values}, geometry=polygons, crs=r1.rio.crs)
-        gdf = gdf.to_crs(epsg=4326)
+    #     gdf = gpd.GeoDataFrame({"change_code": values}, geometry=polygons, crs=r1.rio.crs)
+    #     gdf = gdf.to_crs(epsg=4326)
     
-        # Extract from / to classes
-        gdf["from_class"] = gdf["change_code"] // 100
-        gdf["to_class"] = gdf["change_code"] % 100
+    #     # Extract from / to classes
+    #     gdf["from_class"] = gdf["change_code"] // 100
+    #     gdf["to_class"] = gdf["change_code"] % 100
     
-        return gdf
-    
-    
-    def change_gdf_to_pydeck(gdf):
-        # Assign blended colors based on from_class and to_class
-        blended_colors = {}
-        for f in base_colors:
-            for t in base_colors:
-                if f == t:
-                    continue  # skip no-change
-                blended = [
-                    (base_colors[f][i] + base_colors[t][i]) // 2 for i in range(3)
-                ] + [180]  # RGBA
-                blended_colors[f * 100 + t] = blended
-    
-        gdf["color"] = gdf["change_code"].map(blended_colors)
-    
-        # Pydeck layer
-        layer = pdk.Layer(
-            "GeoJsonLayer",
-            gdf.__geo_interface__,
-            stroked=False,
-            filled=True,
-            get_fill_color="properties.color",
-            pickable=True,
-        )
-    
-        view_state = pdk.ViewState(
-            latitude=gdf.geometry.centroid.y.mean(),
-            longitude=gdf.geometry.centroid.x.mean(),
-            zoom=8,
-        )
-    
-        deck = pdk.Deck(
-            layers=[layer],
-            initial_view_state=view_state,
-            tooltip={"text": "Change: {from_class} → {to_class}"}
-        )
-        return deck
+    #     return gdf
     
     
-    # --- Run ---
-    gdf_change = raster_to_change_vector("predicted_lulc_first.tif", "predicted_lulc_last.tif")
-    change_deck = change_gdf_to_pydeck(gdf_change)
+    # def change_gdf_to_pydeck(gdf):
+    #     # Assign blended colors based on from_class and to_class
+    #     blended_colors = {}
+    #     for f in base_colors:
+    #         for t in base_colors:
+    #             if f == t:
+    #                 continue  # skip no-change
+    #             blended = [
+    #                 (base_colors[f][i] + base_colors[t][i]) // 2 for i in range(3)
+    #             ] + [180]  # RGBA
+    #             blended_colors[f * 100 + t] = blended
+    
+    #     gdf["color"] = gdf["change_code"].map(blended_colors)
+    
+    #     # Pydeck layer
+    #     layer = pdk.Layer(
+    #         "GeoJsonLayer",
+    #         gdf.__geo_interface__,
+    #         stroked=False,
+    #         filled=True,
+    #         get_fill_color="properties.color",
+    #         pickable=True,
+    #     )
+    
+    #     view_state = pdk.ViewState(
+    #         latitude=gdf.geometry.centroid.y.mean(),
+    #         longitude=gdf.geometry.centroid.x.mean(),
+    #         zoom=8,
+    #     )
+    
+    #     deck = pdk.Deck(
+    #         layers=[layer],
+    #         initial_view_state=view_state,
+    #         tooltip={"text": "Change: {from_class} → {to_class}"}
+    #     )
+    #     return deck
+    
+    
+    # # --- Run ---
+    # gdf_change = raster_to_change_vector("predicted_lulc_first.tif", "predicted_lulc_last.tif")
+    # change_deck = change_gdf_to_pydeck(gdf_change)
 
-    st.pydeck_chart(change_deck)
+    # st.pydeck_chart(change_deck)
 
 
     class_dict = {
