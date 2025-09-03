@@ -452,7 +452,7 @@ if (
     st.write(f'Area statistics as of {selected_date_last_s2}')
     st.table(area_last)
 
-    color_map = ['#6E2B0C', '#1854AD', '#DB1E07', '#ED3BB7', '#118C13']
+    color_map = ['#eccb76', '#00a99b', '#9cea4d', '#949494', '#006401']
 
     def plot_donut(df, title, colors=color_map):
         fig, ax = plt.subplots()
