@@ -325,6 +325,13 @@ if (
 
     def raster_to_change_vector(raster_path1, raster_path2):
         # --- 1. Load rasters ---
+
+        r1 = rxr.open_rasterio(raster_path1).squeeze()
+        r2 = rxr.open_rasterio(raster_path2).squeeze()
+
+        # Align CRS and resolution
+        r2 = r2.rio.reproject_match(r1)
+        
         r1 = raster_path1.squeeze()
         r2 = raster_path2.squeeze()
     
